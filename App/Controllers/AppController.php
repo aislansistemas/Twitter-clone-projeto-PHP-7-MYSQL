@@ -11,15 +11,25 @@ class AppController extends Action{
 	public function timeline(){
 
 		$this->validaAutenticacao();
+			
+		//recuperação dos tweets
+		$tweet = Container::getModel('Tweet');
 
-			$tweet=Container::getModel('Tweet');
-			$tweet->__set('id_usuario',$_SESSION['id']);
-			$tweets=$tweet->getAll();
+		$tweet->__set('id_usuario', $_SESSION['id']);
 
-			$this->view->tweets=$tweets;
+		$tweets = $tweet->getAll();
 
-			$this->render('timeline');
-		
+		$this->view->tweets = $tweets;
+
+		$usuario = Container::getModel('Usuario');
+		$usuario->__set('id', $_SESSION['id']);
+
+		$this->view->info_usuario = $usuario->getInfoUsuario();
+		$this->view->total_tweets = $usuario->getTotalTweets();
+		$this->view->total_seguindo = $usuario->getTotalSeguindo();
+		$this->view->total_seguidores = $usuario->getTotalSeguidores();
+
+		$this->render('timeline');
 		
 	}
 
